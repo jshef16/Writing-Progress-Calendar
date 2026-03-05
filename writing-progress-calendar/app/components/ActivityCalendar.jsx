@@ -93,7 +93,7 @@ export default function ActivityCalendar() {
 
         const { data, error } = await supabase
           .from(TABLE_NAME)
-          .select(DATE_COLUMN)
+          .select(`${DATE_COLUMN}, gross`)
           .gte(DATE_COLUMN, oneYearAgo.toISOString());
 
         if (error) throw error;
@@ -102,11 +102,11 @@ export default function ActivityCalendar() {
         data.forEach((row) => {
             const d = new Date(row[DATE_COLUMN]);
             const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-            counts[dateStr] = (counts[dateStr] || 0) + 1;
+            counts[dateStr] = (counts[dateStr] || 0) + (row.gross || 0);
         });
 
         setCountsByDate(counts);
-        setTotalCount(data.length);
+        setTotalCount(Object.values(counts).reduce((sum, val) => sum + val, 0));
 
         // Calculate current streak
         let s = 0;
@@ -183,7 +183,7 @@ export default function ActivityCalendar() {
               Activity
             </h2>
             <p style={{ margin: "4px 0 0", color: "var(--text-muted)", fontSize: "13px" }}>
-              {loading ? "Loading..." : `${totalCount.toLocaleString()} entries in the last year`}
+              {loading ? "Loading..." : `${totalCount.toLocaleString()} total words in the last year`}
             </p>
           </div>
           <div style={{ display: "flex", gap: "20px", textAlign: "right" }}>
@@ -320,7 +320,7 @@ export default function ActivityCalendar() {
           color: "var(--text)",
           boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
         }}>
-          <strong style={{ color: "var(--c4)" }}>{tooltip.count} {tooltip.count === 1 ? "entry" : "entries"}</strong>
+          <strong style={{ color: "var(--c4)" }}>{tooltip.count} {tooltip.count === 1 ? "word" : "words"}</strong>
           <span style={{ color: "var(--text-muted)", marginLeft: 6 }}>{tooltip.date}</span>
         </div>
       )}
