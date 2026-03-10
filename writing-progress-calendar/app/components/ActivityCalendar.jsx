@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { createClient } from "@supabase/supabase-js";
+import { Head } from "next/head";
 
 // ─── CONFIG — update these ────────────────────────────────────────────────────
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -75,6 +76,7 @@ function getMonthPositions(weeks) {
   });
   return positions;
 }
+
 
 export default function ActivityCalendar() {
   const [countsByDate, setCountsByDate] = useState({});
