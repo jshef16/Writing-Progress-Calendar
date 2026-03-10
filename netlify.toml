@@ -1,8 +1,10 @@
+# netlify.toml
+
 [build]
   base = "writing-progress-calendar"
   command = "npm ci && npm run build"
   publish = ".next"
 
+# Make sure the Next.js plugin is enabled
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-``
